@@ -1,0 +1,114 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+pool:
+  vmImage: 'ubuntu-latest'
+
+trigger:
+- develop
+- release
+- master
+
+pr:
+- develop
+- master
+- release
+
+steps:
+
+- ${{ if eq( variables['Build.SourceBranch'], 'refs/heads/dev') }}:
+  - task: CopyFiles@2
+    displayName: 'Copy Deployment definition File'
+    inputs:
+      contents: 'AKS/dev/ui-deploy.yaml'
+      targetFolder: $(Build.ArtifactStagingDirectory)
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish Deployment definition file'
+
+  - script: |
+      docker build -f docker/prod/Dockerfile \
+        --build-arg ISSUER=https://emerson.okta.com/oauth2/default \
+        --build-arg CLIENT_ID=0oa14wgcszgG7Gbov2p8 \
+        --build-arg REACT_APP_DVT_API_ROOT_PATH=https://dvt-dev.emerson.com \
+        -t $(dockerId).azurecr.io/$(imageName):$(Build.BuildId) .
+      docker login $(dockerId).azurecr.io -u $(dockerId) -p $pswd
+      docker push $(dockerId).azurecr.io/$(imageName):$(Build.BuildId)
+    env:
+      pswd: $(dockerPassword)
+    displayName: 'Build and Push Docker Image Dev'
+  - task: wiz@1
+    inputs:
+      serviceConnectionId: 'sc-dvt-wiz-001'
+      command: 'scan'
+      scanType: 'containerimage'
+      image: '$(dockerId).azurecr.io/$(imageName):$(Build.BuildId)'
+      driver: 'mount'
+      succeedonFailures: false
+      sudo: true
+      dockerfile: 'docker/prod/Dockerfile'
+      byPolicyHits: 'DISABLED'
+    
+- ${{ if eq( variables['Build.SourceBranch'], 'refs/heads/stage') }}:
+  - task: CopyFiles@2
+    displayName: 'Copy Deployment definition File'
+    inputs:
+      contents: 'AKS/stage/ui-stage-deploy.yaml'
+      targetFolder: $(Build.ArtifactStagingDirectory)
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish Deployment definition file'
+
+  - script: |
+      docker build -f docker/prod/Dockerfile \
+        --build-arg ISSUER=https://emerson.okta.com/oauth2/default \
+        --build-arg CLIENT_ID=0oa14wggadcJptwgf2p8 \
+        --build-arg REACT_APP_DVT_API_ROOT_PATH=https://dvt-stage.emerson.com \
+        -t $(dockerId).azurecr.io/$(stageimageName):$(Build.BuildId) .
+      docker login $(dockerId).azurecr.io -u $(dockerId) -p $pswd
+      docker push $(dockerId).azurecr.io/$(stageimageName):$(Build.BuildId)
+    env:
+      pswd: $(dockerPassword)
+    displayName: 'Build and Push Docker Image Stage'
+  - task: wiz@1
+    inputs:
+      serviceConnectionId: 'sc-dvt-wiz-001'
+      command: 'scan'
+      scanType: 'containerimage'
+      image: '$(dockerId).azurecr.io/$(stageimageName):$(Build.BuildId)'
+      driver: 'mount'
+      succeedonFailures: false
+      sudo: true
+      dockerfile: 'docker/prod/Dockerfile'
+      byPolicyHits: 'DISABLED'
+    
+- ${{ if eq( variables['Build.SourceBranch'], 'refs/heads/main') }}:
+  - task: CopyFiles@2
+    displayName: 'Copy Deployment definition File'
+    inputs:
+      contents: 'AKS/prod/ui-prod-deploy.yaml'
+      targetFolder: $(Build.ArtifactStagingDirectory)
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish Deployment definition file'
+
+  - script: |
+      docker build -f docker/prod/Dockerfile \
+        --build-arg ISSUER=https://emerson.okta.com/oauth2/default \
+        --build-arg CLIENT_ID=0oa14wg8kuvwzzmyD2p8 \
+        --build-arg REACT_APP_DVT_API_ROOT_PATH=https://dvt.emerson.com \
+        -t $(proddockerId).azurecr.io/$(prodimageName):$(Build.BuildId) .
+      docker login $(proddockerId).azurecr.io -u $(proddockerId) -p $pswd
+      docker push $(proddockerId).azurecr.io/$(prodimageName):$(Build.BuildId)
+    env:
+      pswd: $(proddockerPassword)
+    displayName: 'Build and Push Docker Image Prod'
+  - task: wiz@1
+    inputs:
+      serviceConnectionId: 'sc-dvt-wiz-001'
+      command: 'scan'
+      scanType: 'containerimage'
+      image: '$(proddockerId).azurecr.io/$(prodimageName):$(Build.BuildId)'
+      driver: 'mount'
+      succeedonFailures: false
+      sudo: true
+      dockerfile: 'docker/prod/Dockerfile'
+      byPolicyHits: 'DISABLED'

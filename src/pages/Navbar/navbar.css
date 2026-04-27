@@ -1,0 +1,72 @@
+/* ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid #e7e7e7;
+  background-color: #fff;
+}
+
+li {
+  float: left;
+  margin-left: 5px;
+}
+
+a {
+  display: block;
+  color: #666;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+.active {
+  color: white;
+  background-color: #004b8d;
+}
+
+.active:hover {
+  color: white;
+  background-color: #004b8d;
+}
+
+.logout {
+  float: right;
+} */
+
+.navbarContainer .Toastify__toast-container:has(div.notification-toastify) {
+  width: 98%;
+}
+
+.navbarContainer .Toastify__toast-container:has(div.notification-toastify) h4 {
+  margin-bottom: 0;
+}
+
+.notification-body {
+  display: flex;
+}
+
+.navbarContainer .MuiPaper-root .MuiList-padding {
+  padding-right: 8px;
+}
+
+.bread-crumbs-app .MuiBreadcrumbs-li {
+  margin-left: 0;
+}
+
+.bread-crumbs-app .MuiBreadcrumbs-li a {
+  color: #4183c4;
+  padding: 0;
+}
+
+.bread-crumbs-app .MuiBreadcrumbs-li a:hover {
+  background-color: #fff;
+}
+
+.bread-crumbs-app {
+  margin-left: 40px;
+}
+
+.dialogOpen .MuiPaper-root {
+  max-width: 400px;
+}

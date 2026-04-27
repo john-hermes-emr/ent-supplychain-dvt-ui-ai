@@ -1,0 +1,26 @@
+.divstamappfooter {
+    padding-left: 3%;
+    padding-right: 3%;
+}
+
+.footer {
+    background-color: #004B8D;
+    width: 99%;
+    z-index: 9;
+    bottom: -7px;
+    color: white;
+    font-size: 10px;
+    text-align: right;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-right: 22px;
+    font-weight: normal;
+    position: fixed;
+}
+
+.footer .environment-name {
+    float: left;
+    margin-left: 3%;
+    margin-top: 6px;
+    font-size: 16px;
+}

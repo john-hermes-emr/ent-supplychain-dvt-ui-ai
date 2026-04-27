@@ -1,0 +1,22 @@
+/* HelpDocuments Component Styles */
+.help-documents-container button {
+    color: #006998;
+}
+
+.help-documents-container button svg.MuiSvgIcon-root {
+    font-size: 1.8rem;
+}
+
+.help-documents-container button.MuiButtonBase-root:hover {
+    background-color: #e7e7e7;
+}
+
+.help-documents-container span.MuiButton-icon {
+    margin-right: -3px;
+}
+
+.help-documents-container ul.MuiList-root li.MuiMenuItem-root {
+    color: #4183c4;
+    text-decoration: underline;
+    font-size: .875em;
+}

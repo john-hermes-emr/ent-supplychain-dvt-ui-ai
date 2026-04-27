@@ -1,0 +1,38 @@
+/*------------------------------------*\
+	EMERSON COLOR
+\*------------------------------------*/
+/*------------------------------------*\
+	VARIABLES
+\*------------------------------------*/
+/* ----- CSS VARIABLES ----- */
+:root {
+    --ddl-color--primary-white: #fff;
+    --ddl-color--primary-black: #000000;
+    --ddl-color--primary-grey: #f0f0f0;
+    --ddl-color--primary-grey-dark: #7d7d7d;
+    --ddl-color--primary-emerson-green: #00805a;
+    --ddl-color--primary-emerson-green-dark: #00573d;
+    --ddl-color--primary-sensi-blue: #006998;
+    --ddl-color--primary-insinkerator-blue: #236192;
+    --ddl-color--primary-cf-midnight-blue: #304d60;
+    --ddl-color--primary-red: #DA291C;
+    --ddl-color--primary-ridgid-red: #B62217;
+    --ddl-color--primary-proteam-purple: #6a37b0;
+    --ddl-color--primary-workshop-yellow: #f0b310;
+    --ddl-color--secondary-emerson-navy: #004b8d;
+    --ddl-color--secondary-sensi-aqua: #64b1bb;
+    --ddl-color--secondary-cf-orange: #ff912b;
+    --ddl-color--secondary-ridgid-orange: #f88126;
+    --ddl-color--tertiary-slate-blue: #7b9baa;
+    --ddl-color--tertiary-ridgid-black: #00001a;
+    --ddl-color--tertiary-ridgid-grey: #8a8b8d;
+    --ddl-color--tertiary-workshop-grey: #999999;
+    --ddl-color--tertiary-navy: #004b8d;
+    --ddl-color--off-black: #101010;
+    --ddl-color--rich-black: #2d383f;
+    --ddl-color--blue-grey: #dee6ea;
+    --ddl-color--cool-grey: #c4ced1;
+    --ddl-color--cool-grey-dark: #b6c2c6;
+    --ddl-color--warm-grey: #c0c0c0;
+    --ddl-color--disabled-button-text: #ffffffa2;
+}

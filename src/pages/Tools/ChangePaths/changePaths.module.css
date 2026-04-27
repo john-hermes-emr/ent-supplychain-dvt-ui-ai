@@ -1,0 +1,52 @@
+.table {
+    padding: 12px;
+    padding-right: 40px;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 25px;
+    padding-right: 25px;
+}
+
+.item {
+    display: flex;
+    /* flex-direction: row;
+    justify-content: center; */
+    align-items: center;
+    height: 38px;
+    margin: 0 10px;
+    padding: 0 10px;
+    border: 1px solid var(--ddl-color--cool-grey);
+}
+
+.itemTitle {
+    flex: 0.5;
+}
+
+.folderIcon {
+    flex: 0.1;
+    border: none;
+}
+
+.paths {
+    flex: 3;
+}
+
+.icon {
+    width: 30px;
+    opacity: 0.5;
+    cursor: pointer;
+}
+
+.buttonGroup {
+    width: 200px;
+}
+
+.changePathsTitle {
+    font-weight: 400;
+}

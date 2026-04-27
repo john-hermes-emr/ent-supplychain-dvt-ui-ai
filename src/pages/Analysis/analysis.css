@@ -1,0 +1,7 @@
+.acceptDialogOpen .MuiPaper-root {
+    max-width: 300px;
+}
+
+.acceptDialogOpen .MuiPaper-root .MuiDialogContent-root {
+    text-align: center;
+}

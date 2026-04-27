@@ -1,0 +1,28 @@
+/* Hide rc-tree's default switcher icon */
+.rc-tree-switcher {
+    background: none !important;
+}
+
+.rc-tree-switcher-icon {
+    display: none !important;
+}
+
+.rc-tree-title {
+    margin-left: 4px;
+}
+
+.rc-tree-list-holder {
+    text-align: left;
+}
+
+.changePathsDialog .MuiPaper-root {
+    min-height: 400px;
+}
+
+.changePathsDialog .MuiPaper-root h2.MuiDialogTitle-root {
+    text-align: center;
+    padding: 3px 24px;
+    margin-bottom: 20px;
+    color: #fff;
+    background-color: #1565c0;
+}

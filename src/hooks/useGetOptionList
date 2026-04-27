@@ -1,0 +1,37 @@
+import React, { useState, useEffect } from 'react';
+import axios from 'axios'
+import { ApiHelper } from '../dvt_api/ApiHelper';
+import { DvtApiPaths } from '../dvt_api/DvtApiPaths';
+
+const useGetOptionListByListName = (categoryName) => {
+    const [optionListValues, setOptionListValues] = useState([]);
+
+    useEffect(() => {
+        try {
+            const fetchData = async () => {
+                const result = await axios({
+                    method: 'get',
+                    url: ApiHelper.getApiUrlWithId(DvtApiPaths.OptionList.GetByCategoryName, categoryName)
+                });
+
+                let condensedList =
+                    result.data
+                        .sort((a, b) => a.sortField - b.sortField)
+                        .map(item => {
+                            return { value: item.optionId, label: item.optionName };
+                        });
+                setOptionListValues(condensedList);
+            };
+
+            fetchData();
+        }
+        catch (err) {
+            const { data, status } = err.response
+            console.error(`Error response :${data} status :${status}`);
+        }
+    }, [categoryName]);
+
+    return [optionListValues];
+}
+
+export default useGetOptionListByListName;

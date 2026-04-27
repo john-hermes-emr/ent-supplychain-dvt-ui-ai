@@ -1,0 +1,32 @@
+{
+    "Common": {
+        "DoYouWantToProceed": "Do you want to proceed?",
+        "ConfirmContinueMessage": "Are you sure you want to continue?",
+        "RequiredMessage": "This is a required field.",
+        "UnsavedChangesMessage": "Unsaved changes will be lost and if you wish to proceed?"
+    },
+    "Home": {
+        "AtLeastOneFileRequired": "At least one file is required.",
+        "ExistingOperation": "There is an existing operation for division {id} and feed number {id}.",
+        "DoYouWantToProceed": "Would you want to resume or cancel the existing operation?",
+        "ExistingOperationNotMatch": "The existing job does not match the user's selections",
+        "ExistingActiveJob": "There is an active job for the user.",
+        "DifferentStatusFiles": "There are files with different statuses selected. Do you want to proceed?",
+        "ForceRefreshMessage": "Are you sure you want to refresh? This action will lose all current progress.",
+        "DivisionOrFeedRequired": "Division and Feed Number are required.",
+        "SingleFileRequired": "Please select only one file for analysis.",
+        "InProgressFileRequired": "Only VALIDATED CRITICAL, ERRORS, and WARNING status can be analyzed.",
+        "NoDataAvailable": "No data available. Please select Division and Feed.",
+        "LoadAllThenValidate": "Load all then validate one or more selected files.",
+        "ClearSelection": "Clears selection of division, feed no., removes files in the grid.",
+        "UpdateData": "Update data in the grid, interrupts current process.",
+        "DisplayValidationDetails": "Display details of validation.",
+        "RecordsContainWarningsOrErrors": "Records contain WARNING or ERRORS.Do you want to proceed?"
+    },
+    "Tools": {},
+    "Help": {},
+    "Analysis": {
+        "viewErrorsTitle": "Double click row to view selected errors.",
+        "noValidationErrors": "No validation errors to display."
+    }
+}

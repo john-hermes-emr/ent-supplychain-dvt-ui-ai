@@ -1,0 +1,114 @@
+.analysisContainer {
+    padding: 12px;
+}
+
+.analysisTitle {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    font-weight: 400;
+}
+
+.buttonContainer {
+    display: flex;
+    justify-content: flex-start;
+    padding: 12px;
+    background-color: #DEDFE0;
+    margin-bottom: 16px;
+}
+
+.analysisContainer .buttonContainer button {
+    width: 200px;
+}
+
+.analysisContainer .buttonContainer button:first-child {
+    margin-right: 16px;
+}
+
+.analysisContainer .buttonContainer button:last-child {
+    margin-left: 16px;
+}
+
+
+.helpIcon {
+    width: 20px;
+    height: 20px;
+    margin-left: 8px;
+    margin-right: 4px;
+    vertical-align: middle;
+}
+
+.analysisContent {
+    display: flex;
+    flex-direction: row;
+}
+
+.analysisData {
+    flex: 3;
+}
+
+.reportContainer {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    padding: 16px;
+}
+
+.analysisContainer .reportContainer button {
+    width: 200px;
+}
+
+.analysisContainer .reportContainer button:last-child {
+    margin-top: 15px;
+}
+
+.errorDetailsContent {
+    padding: 12PX;
+    display: flex;
+    border: 2px solid #DEDFE0;
+    flex-direction: column;
+    max-height: calc(100vh - 260px);
+    overflow-y: scroll;
+}
+
+.errorDetailsHeader {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 30px;
+}
+
+.errorDetailsHeader div:first-child {
+    margin-right: 150px;
+}
+
+.errorDetailsBody {
+    margin-bottom: 20PX;
+}
+
+.errorDetailItem {
+    margin-bottom: 20px;
+}
+
+.helpIconContainer {
+    display: flex;
+    align-items: center;
+}
+
+.helpIconContainer span {
+    font-weight: normal;
+    font-size: 14px;
+}
+
+.fileTypeButtonContainer {
+    display: inline-flex;
+}
+
+.analysisTitle .fileTypeButtonContainer button {
+    margin-left: 16px;
+    min-width: 100px;
+    cursor: default;
+}
+
+.analysisTitle .fileTypeButtonContainer button:first-child {
+    margin-left: 32px;
+}

@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dvt-prod-ui-deploy
+  namespace: dvt-prod-ns
+spec:
+  selector:
+    matchLabels:
+      app: dvt-prod
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: dvt-prod
+    spec:
+      containers:
+      - name: dvt-prod
+        image: acrdvtprod.azurecr.io/dvt-prod-ui:##BuildId##
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+        env:
+        - name: ISSUER
+          value: https://emerson.okta.com/oauth2/default
+        - name: CLIENT_ID
+          value: 0oa14wg8kuvwzzmyD2p8
+        - name: REACT_APP_DVT_API_ROOT_PATH
+          value: "https://dvt.emerson.com"
+      imagePullSecrets:
+      - name: dvt-prod-acr-secret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dvt-prod-ui-svc
+  namespace: dvt-prod-ns
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 80
+  - name: https
+    port: 443
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: dvt-prod

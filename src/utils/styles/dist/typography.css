@@ -1,0 +1,231 @@
+.ddl-typography {
+  font-family: "HCo Whitney SSm", "Whitney SSm A", "Whitney SSm B", "Open Sans", Helvetica, Arial, sans-serif;
+}
+.ddl-typography--display-title {
+  font-family: "HCo Whitney SSm", "Whitney SSm A", "Whitney SSm B", "Open Sans", Helvetica, Arial, sans-serif;
+  font-size: 3rem;
+  font-weight: 300;
+  line-height: 3.5rem;
+}
+@media (min-width: 1280px) {
+  .ddl-typography--display-title {
+    font-size: 3.5rem;
+    line-height: 4rem;
+  }
+}
+.ddl-typography--h1 {
+  font-family: "HCo Whitney SSm", "Whitney SSm A", "Whitney SSm B", "Open Sans", Helvetica, Arial, sans-serif;
+  font-size: 2.25rem;
+  font-weight: 300;
+  line-height: 3rem;
+}
+@media (min-width: 1280px) {
+  .ddl-typography--h1 {
+    font-size: 2.75rem;
+    line-height: 3.5rem;
+  }
+}
+.ddl-typography--h2 {
+  font-family: "HCo Whitney SSm", "Whitney SSm A", "Whitney SSm B", "Open Sans", Helvetica, Arial, sans-serif;
+  font-size: 1.875rem;
+  font-weight: 300;
+  line-height: 2.5rem;
+}
+@media (min-width: 1280px) {
+  .ddl-typography--h2 {
+    font-size: 2.25rem;
+    line-height: 3rem;
+  }
+}
+.ddl-typography--h3 {
+  font-family: "HCo Whitney SSm", "Whitney SSm A", "Whitney SSm B", "Open Sans", Helvetica, Arial, sans-serif;
+  font-size: 1.5rem;
+  font-weight: 300;
+  line-height: 2rem;
+}
+@media (min-width: 1280px) {
+  .ddl-typography--h3 {
+    font-size: 1.875rem;
+    line-height: 2.5rem;
+  }
+}
+.ddl-typography--h4 {
+  font-family: "HCo Whitney SSm", "Whitney SSm A", "Whitney SSm B", "Open Sans", Helvetica, Arial, sans-serif;
+  font-size: 1.25rem;
+  font-weight: 400;
+  line-height: 1.5rem;
+}
+@media (min-width: 1280px) {
+  .ddl-typography--h4 {
+    font-size: 1.5rem;
+    line-height: 2rem;
+  }
+}
+.ddl-typography--h5 {
+  font-family: "HCo Whitney SSm", "Whitney SSm A", "Whitney SSm B", "Open Sans", Helvetica, Arial, sans-serif;
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.5rem;
+}
+@media (min-width: 1280px) {
+  .ddl-typography--h5 {
+    font-size: 1.125rem;
+    line-height: 1.5rem;
+  }
+}
+.ddl-typography--h6 {
+  font-family: "HCo Whitney SSm", "Whitney SSm A", "Whitney SSm B", "Open Sans", Helvetica, Arial, sans-serif;
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.5rem;
+}
+.ddl-typography--paragraph {
+  font-family: "HCo Whitney SSm", "Whitney SSm A", "Whitney SSm B", "Open Sans", Helvetica, Arial, sans-serif;
+  font-size: 1rem;
+  font-weight: 300;
+  line-height: 1.5rem;
+}
+.ddl-typography--article-body {
+  font-family: "HCo Whitney SSm", "Whitney SSm A", "Whitney SSm B", "Open Sans", Helvetica, Arial, sans-serif;
+  font-size: 1rem;
+  font-weight: 300;
+  line-height: 2rem;
+}
+@media (min-width: 1280px) {
+  .ddl-typography--article-body {
+    font-size: 1.125rem;
+    line-height: 2rem;
+  }
+}
+.ddl-typography--p1-body {
+  font-family: "HCo Whitney SSm", "Whitney SSm A", "Whitney SSm B", "Open Sans", Helvetica, Arial, sans-serif;
+  font-size: 1.625rem;
+  font-weight: 300;
+  line-height: 2.5rem;
+}
+@media (min-width: 1280px) {
+  .ddl-typography--p1-body {
+    font-size: 1.75rem;
+    line-height: 2.5rem;
+  }
+}
+.ddl-typography--p2-body {
+  font-family: "HCo Whitney SSm", "Whitney SSm A", "Whitney SSm B", "Open Sans", Helvetica, Arial, sans-serif;
+  font-size: 1.375rem;
+  font-weight: 300;
+  line-height: 2rem;
+}
+.ddl-typography--p3-body {
+  font-family: "HCo Whitney SSm", "Whitney SSm A", "Whitney SSm B", "Open Sans", Helvetica, Arial, sans-serif;
+  font-size: 1.125rem;
+  font-weight: 300;
+  line-height: 1.5rem;
+}
+.ddl-typography--p4-body {
+  font-family: "HCo Whitney SSm", "Whitney SSm A", "Whitney SSm B", "Open Sans", Helvetica, Arial, sans-serif;
+  font-size: 0.875rem;
+  font-weight: 300;
+  line-height: 1.5rem;
+}
+.ddl-typography--p5-body {
+  font-family: "HCo Whitney SSm", "Whitney SSm A", "Whitney SSm B", "Open Sans", Helvetica, Arial, sans-serif;
+  font-size: 0.75rem;
+  font-weight: 400;
+  line-height: 1rem;
+}
+.ddl-typography--p6-body {
+  font-family: "HCo Whitney SSm", "Whitney SSm A", "Whitney SSm B", "Open Sans", Helvetica, Arial, sans-serif;
+  font-size: 0.625rem;
+  font-weight: 400;
+  line-height: 1rem;
+}
+.ddl-typography--bold {
+  font-family: "HCo Whitney SSm", "Whitney SSm A", "Whitney SSm B", "Open Sans", Helvetica, Arial, sans-serif;
+  font-size: inherit;
+  font-weight: 600;
+  line-height: inherit;
+}
+.ddl-typography--italic {
+  font-family: "HCo Whitney SSm", "Whitney SSm A", "Whitney SSm B", "Open Sans", Helvetica, Arial, sans-serif;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  font-style: italic;
+}
+.ddl-typography--underline {
+  font-family: "HCo Whitney SSm", "Whitney SSm A", "Whitney SSm B", "Open Sans", Helvetica, Arial, sans-serif;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  text-decoration: underline;
+}
+.ddl-typography--subscript {
+  font-family: "HCo Whitney SSm", "Whitney SSm A", "Whitney SSm B", "Open Sans", Helvetica, Arial, sans-serif;
+  font-size: 0.75em;
+  font-weight: inherit;
+  line-height: inherit;
+}
+.ddl-typography--superscript {
+  font-family: "HCo Whitney SSm", "Whitney SSm A", "Whitney SSm B", "Open Sans", Helvetica, Arial, sans-serif;
+  font-size: 0.75em;
+  font-weight: inherit;
+  line-height: inherit;
+}
+.ddl-typography--label {
+  font-family: "HCo Whitney SSm", "Whitney SSm A", "Whitney SSm B", "Open Sans", Helvetica, Arial, sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  line-height: 1rem;
+  text-transform: uppercase;
+}
+.ddl-typography--eyebrow {
+  font-family: "HCo Whitney SSm", "Whitney SSm A", "Whitney SSm B", "Open Sans", Helvetica, Arial, sans-serif;
+  color: var(--ddl-color--secondary-emerson-navy);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  line-height: 1rem;
+  text-transform: uppercase;
+}
+.ddl-typography--rich-text,
+.ddl-typography--rich-text p {
+  font-family: "HCo Whitney SSm", "Whitney SSm A", "Whitney SSm B", "Open Sans", Helvetica, Arial, sans-serif;
+  font-size: 1rem;
+  font-weight: 300;
+  line-height: 1.5rem;
+}
+.ddl-typography--rich-text b,
+.ddl-typography--rich-text strong {
+  font-family: "HCo Whitney SSm", "Whitney SSm A", "Whitney SSm B", "Open Sans", Helvetica, Arial, sans-serif;
+  font-size: inherit;
+  font-weight: 600;
+  line-height: inherit;
+}
+.ddl-typography--rich-text em,
+.ddl-typography--rich-text i {
+  font-family: "HCo Whitney SSm", "Whitney SSm A", "Whitney SSm B", "Open Sans", Helvetica, Arial, sans-serif;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  font-style: italic;
+}
+.ddl-typography--rich-text u {
+  font-family: "HCo Whitney SSm", "Whitney SSm A", "Whitney SSm B", "Open Sans", Helvetica, Arial, sans-serif;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  text-decoration: underline;
+}
+.ddl-typography--rich-text sup {
+  font-family: "HCo Whitney SSm", "Whitney SSm A", "Whitney SSm B", "Open Sans", Helvetica, Arial, sans-serif;
+  font-size: 0.75em;
+  font-weight: inherit;
+  line-height: inherit;
+}
+.ddl-typography--rich-text sub {
+  font-family: "HCo Whitney SSm", "Whitney SSm A", "Whitney SSm B", "Open Sans", Helvetica, Arial, sans-serif;
+  font-size: 0.75em;
+  font-weight: inherit;
+  line-height: inherit;
+}

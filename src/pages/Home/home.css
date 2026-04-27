@@ -1,0 +1,45 @@
+.container {
+    text-align: center;
+    width: 100%;
+    height: auto;
+    padding-top: 240px;
+}
+
+.btn {
+    font-size: 25px;
+}
+
+.homeHeader {
+    display: flex;
+    align-items: center;
+}
+
+.homeHeader_right {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.clsOldTechInfo {
+    background-color: #f7f7c5;
+    font-style: italic;
+    font-size: 0.875rem;
+    /* Adjust the size as needed */
+}
+
+.decommssioned-checkbox .MuiFormGroup-root {
+    margin-top: 30px;
+}
+
+.existing-content {
+    text-align: left;
+}
+
+.existing-content div:first-child {
+    margin-bottom: 10px;
+}
+
+.statusProgressContainer button {
+    margin-right: 10px;
+}

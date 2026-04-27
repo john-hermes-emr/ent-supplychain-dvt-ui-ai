@@ -1,0 +1,7 @@
+.dialogTitle {
+    color: var(--ddl-color--primary-sensi-blue);
+}
+
+.dialogContent {
+    color: var(--ddl-color--primary-grey-dark);
+}

@@ -1,0 +1,15 @@
+.custom-input {
+    position: relative;
+    display: inline-block;
+    height: 36px;
+    width: 100%;
+    border: 1px solid rgb(204, 204, 204);
+    border-radius: 4px;
+    padding: 0 10px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.custom-input:focus {
+    border: 1px solid rgb(38, 132, 255);
+}

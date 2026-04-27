@@ -1,0 +1,41 @@
+.container {
+    text-align: center;
+    width: 100%;
+    height: auto;
+    padding-top: 240px;
+}
+
+.button_input {
+    width: 180px;
+}
+
+.rowContainer {
+    display: flex;
+    flex-direction: row;
+    /* justify-content: space-between; */
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.item {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+}
+
+.disabledItem {
+    cursor: not-allowed;
+}
+
+.divisionSelect {
+    flex: 2;
+}
+
+.label {
+    /* display: inline; */
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+    margin-right: 10px;
+}

@@ -1,0 +1,14 @@
+/*------------------------------------*\
+	EMERSON BASE STYLES
+\*------------------------------------*/
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  font-family: "HCo Whitney SSm", "Whitney SSm A", "Whitney SSm B", "Open Sans", Helvetica, Arial, sans-serif;
+  font-size: 16px;
+}

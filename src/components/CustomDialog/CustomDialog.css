@@ -1,0 +1,54 @@
+.customDialog .dialogActions {
+    justify-content: center;
+}
+
+.customDialog .dialogButton {
+    min-width: 80px;
+    color: var(--ddl-color--primary-white);
+    background-color: #1565c0;
+    margin: 0 5px;
+}
+
+.customDialog .dialogButton.Mui-disabled {
+    /* background-color: var(--ddl-color__grey--dark-16);
+    color: var(--ddl-color__base--reverse); */
+    pointer-events: painted;
+    cursor: not-allowed;
+    color: var(--mui-palette-action-disabled, rgba(0, 0, 0, 0.26));
+    box-shadow: var(--mui-shadows-0, none);
+    background-color: var(--mui-palette-action-disabledBackground, rgba(0, 0, 0, 0.12));
+}
+
+.customDialog .dialogButton.Mui-disabled:hover {
+    color: var(--mui-palette-action-disabled, rgba(0, 0, 0, 0.26));
+    box-shadow: var(--mui-shadows-0, none);
+    background-color: var(--mui-palette-action-disabledBackground, rgba(0, 0, 0, 0.12));
+}
+
+.customDialog .dialogButton:hover {
+    background-color: #1859a2;
+}
+
+.customDialog .dialogButton:last-child {
+    color: var(--ddl-color--rich-black);
+    background-color: var(--ddl-color--cool-grey);
+    margin: 0 5px;
+}
+
+.customDialog .dialogButton:last-child:hover {
+    background-color: var(--ddl-color--cool-grey-dark);
+}
+
+
+.customDialog .MuiPaper-root {
+    text-align: center;
+}
+
+.customDialog .MuiPaper-root button {
+    text-transform: none;
+}
+
+.customDialog h2.MuiDialogTitle-root {
+    text-align: left;
+    color: rgba(0, 0, 0, 0.87);
+}
