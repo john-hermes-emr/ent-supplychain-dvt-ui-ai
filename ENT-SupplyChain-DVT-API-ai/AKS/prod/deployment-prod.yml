@@ -1,0 +1,164 @@
+apiVersion: secrets-store.csi.x-k8s.io/v1
+kind: SecretProviderClass
+metadata:
+  name: azure-tls
+  namespace: dvt-prod-ns
+spec:
+  provider: azure
+  secretObjects:                           
+  - secretName: ingress-tls-csi
+    type: kubernetes.io/tls
+    data: 
+    - objectName: cert-dvt-prod
+      key: tls.key
+    - objectName: cert-dvt-prod
+      key: tls.crt
+  parameters:
+    useVMManagedIdentity: "true"    
+    userAssignedIdentityID: ##ClientID##
+    keyvaultName: kv-aks-dvt-prod
+    objects: |
+      array:
+        - |
+          objectName: cert-dvt-prod
+          objectAlias: cert-dvt-prod
+          objectType: secret
+    tenantId: ##TenantID##
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dvt-prod-api-deploy
+  namespace: dvt-prod-ns
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: dvt-prod-api
+  template:
+    metadata:
+      labels:
+        app: dvt-prod-api
+    spec:
+      containers:
+        - name: dvt-prod-api
+          image: ##acr-name##/##imageName##:##BuildId##
+          ports:
+            - containerPort: 80
+          envFrom:
+            - configMapRef:
+                name: app-settings-prod
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: "Prod"
+            - name: AZURE_CLIENT_ID
+              value: ##ClientID##
+          imagePullPolicy: Always
+      imagePullSecrets:
+        - name: ##ACR-SECRET##
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dvt-prod-api-svc
+  namespace: dvt-prod-ns
+spec:
+  ports:
+  - name: http
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  - name: https
+    port: 443
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: dvt-prod-api
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: dvt-prod-ingress
+  namespace: dvt-prod-ns
+  annotations:
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "*"
+    nginx.ingress.kubernetes.io/cors-allow-methods: "GET, POST, PUT, DELETE, OPTIONS"
+    nginx.ingress.kubernetes.io/cors-allow-headers: "DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range, Authorization"
+    nginx.ingress.kubernetes.io/cors-expose-headers: "Content-Length,Content-Range"
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "300"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "300"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "300"
+    nginx.ingress.kubernetes.io/limit-connections: "20"
+    nginx.ingress.kubernetes.io/limit-rpm: "60"
+    nginx.ingress.kubernetes.io/server-snippet: |  
+      ssl_ciphers "EECDH+ECDSA+AESGCM EECDH+aRSA+AESGCM EECDH+ECDSA+SHA384 EECDH+ECDSA+SHA256 EECDH+aRSA+SHA384 EECDH+aRSA+SHA256 EECDH+aRSA+RC4 EECDH EDH+aRSA HIGH !RC4 !aNULL !eNULL !LOW !3DES !MD5 !EXP !PSK !SRP !DSS";
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      more_set_headers "Strict-Transport-Security: max-age=31536000; includeSubDomains; preload";
+      more_set_headers "server: hide";
+      more_set_headers "X-Content-Type-Options: nosniff";
+      more_set_headers "Expires: Tue, 03 Jul 2001 06:00:00 GMT";
+      more_set_headers "Cache-Control: no-store, no-cache, must-revalidate, max-age=0";
+      more_set_headers "X-Frame-Options: SAMEORIGIN";
+      more_set_headers "X-XSS-Protection: 1; mode=block";
+      more_set_headers "Access-Control-Allow-Origin: *";
+spec:
+  ingressClassName: ingress-class-prod
+  tls:
+    - hosts:
+        - ##hostname##
+      secretName: ingress-tls-csi
+  rules:
+    - host: ##hostname##
+      http:
+        paths:
+          - path: /?(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: dvt-prod-ui-svc
+                port:
+                  number: 80
+          - path: /ui/?(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: dvt-prod-ui-svc
+                port:
+                  number: 80
+          - path: /api/?(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: dvt-prod-api-svc
+                port:
+                  number: 8080
+---
+apiVersion: azconfig.io/v1
+kind: AzureAppConfigurationProvider
+metadata:
+  name: app-config-prod
+  namespace: dvt-prod-ns
+spec:
+  endpoint: ##App-Config##
+  auth:
+    managedIdentityClientId: ##ClientID##
+  configuration:
+    selectors:
+      - keyFilter: "MainFileShareName"
+      - keyFilter: "PostgreSQLConnectionString"
+      - keyFilter: "StorageAccountConnectionString"
+      - keyFilter: "UserFileShareName"
+  target:
+    configMapName: app-settings-prod
+    configMapData:
+      type: json
+      key: appsettings.json
+  secret:
+    target:
+      secretName: app-secrets-prod
+    auth:
+      managedIdentityClientId: ##ClientID##

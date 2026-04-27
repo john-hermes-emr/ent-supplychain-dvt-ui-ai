@@ -1,0 +1,103 @@
+# Docker
+# Build a Docker image
+# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
+trigger:
+  paths:
+    exclude:
+      - docs/**
+
+pool:
+  vmImage: ubuntu-latest
+
+
+steps:
+- ${{ if eq( variables['Build.SourceBranch'], 'refs/heads/dev') }}:
+  - task: DotNetCoreCLI@2
+    displayName: 'UnitTest and coverage'
+    inputs:
+      command: 'test'
+      projects: '**/*Test/*.csproj'
+      arguments: '--collect "Code coverage"'
+
+  - task: CopyFiles@2
+    displayName: 'Copy Deployment definition File'
+    inputs:
+      contents: 'AKS/dev/Deployment-dev.yml'
+      targetFolder: $(Build.ArtifactStagingDirectory)
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish Deployment definition file'
+
+  - script: |
+       docker login $(dockerId).azurecr.io --username $(dockerId) --password $pswd
+       docker build -f Dockerfile -t $(dockerId).azurecr.io/$(imageName):$(Build.BuildId) .
+       docker push $(dockerId).azurecr.io/$(imageName):$(Build.BuildId)
+    env:
+      pswd: $(dockerPassword)
+    displayName: 'Build and push Docker image Dev'
+  - task: wiz@1
+    inputs:
+      serviceConnectionId: 'sc-dvt-wiz-001'
+      command: 'scan'
+      scanType: 'containerimage'
+      image: '$(dockerId).azurecr.io/$(imageName):$(Build.BuildId)'
+      driver: 'mount'
+      succeedonFailures: false
+      sudo: true
+      dockerfile: 'Dockerfile'
+      byPolicyHits: 'DISABLED'
+    
+- ${{ if eq( variables['Build.SourceBranch'], 'refs/heads/stage') }}:
+  - task: CopyFiles@2
+    displayName: 'Copy Deployment definition File'
+    inputs:
+      contents: 'AKS/stage/Deployment-stage.yml'
+      targetFolder: $(Build.ArtifactStagingDirectory)
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish Deployment definition file'
+
+  - script: |
+       docker login $(dockerId).azurecr.io --username $(dockerId) --password $pswd
+       docker build -f Dockerfile -t $(dockerId).azurecr.io/$(StageimageName):$(Build.BuildId) .
+       docker push $(dockerId).azurecr.io/$(StageimageName):$(Build.BuildId)
+    env:
+      pswd: $(dockerPassword)
+    displayName: 'Build and push Docker image Stage'
+  - task: wiz@1
+    inputs:
+      serviceConnectionId: 'sc-dvt-wiz-001'
+      command: 'scan'
+      scanType: 'containerimage'
+      image: '$(dockerId).azurecr.io/$(StageimageName):$(Build.BuildId)'
+      driver: 'mount'
+      succeedonFailures: false
+      sudo: true
+      dockerfile: 'Dockerfile'
+      byPolicyHits: 'DISABLED'
+    
+- ${{ if eq( variables['Build.SourceBranch'], 'refs/heads/main') }}:
+  - task: CopyFiles@2
+    displayName: 'Copy Deployment definition File'
+    inputs:
+      contents: 'AKS/prod/deployment-prod.yml'
+      targetFolder: $(Build.ArtifactStagingDirectory)
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish Deployment definition file'
+
+  - script: |
+       docker login $(proddockerId).azurecr.io --username $(proddockerId) --password $pswd
+       docker build -f Dockerfile -t $(proddockerId).azurecr.io/$(prodimageName):$(Build.BuildId) .
+       docker push $(proddockerId).azurecr.io/$(prodimageName):$(Build.BuildId)
+    env:
+      pswd: $(proddockerPassword)
+    displayName: 'Build and push Docker image Prod'
+  - task: wiz@1
+    inputs:
+      serviceConnectionId: 'sc-dvt-wiz-001'
+      command: 'scan'
+      scanType: 'containerimage'
+      image: '$(proddockerId).azurecr.io/$(prodimageName):$(Build.BuildId)'
+      driver: 'mount'
+      succeedonFailures: false
+      sudo: true
+      dockerfile: 'Dockerfile'
+      byPolicyHits: 'DISABLED'

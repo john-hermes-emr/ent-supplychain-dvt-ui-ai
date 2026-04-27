@@ -1,0 +1,26 @@
+# Docker
+# Build a Docker image
+# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
+
+
+pool:
+  vmImage: ubuntu-latest
+
+
+steps:
+
+- task: CopyFiles@2
+  displayName: 'Copy Deployment definition File'
+  inputs:
+    contents: 'AKS/dev/aks-deploy-worker-dev.yaml'
+    targetFolder: $(Build.ArtifactStagingDirectory)
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Deployment definition file'
+
+- script: |
+    docker login $(dockerId).azurecr.io --username $(dockerId) --password $pswd
+    docker build -f WorkerService/Dockerfile -t $(dockerId).azurecr.io/$(imageName):$(Build.BuildId) .
+    docker push $(dockerId).azurecr.io/$(imageName):$(Build.BuildId)
+  env:
+    pswd: $(dockerPassword)
+  displayName: 'Build and push Docker image'

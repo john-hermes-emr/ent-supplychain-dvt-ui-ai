@@ -1,0 +1,211 @@
+apiVersion: secrets-store.csi.x-k8s.io/v1
+kind: SecretProviderClass
+metadata:
+  name: azure-tls
+  namespace: dvt-dev-ns
+spec:
+  provider: azure
+  secretObjects:                           
+  - secretName: ingress-tls-csi
+    type: kubernetes.io/tls
+    data: 
+    - objectName: cert-dvt-nonprod
+      key: tls.key
+    - objectName: cert-dvt-nonprod
+      key: tls.crt
+  parameters:
+    useVMManagedIdentity: "true"    
+    userAssignedIdentityID: ##ClientID##
+    keyvaultName: kv-aks-dvt-nonprod
+    objects: |
+      array:
+        - |
+          objectName: cert-dvt-nonprod
+          objectAlias: cert-dvt-nonprod
+          objectType: secret
+    tenantId: ##TenantID##
+---
+apiVersion: secrets-store.csi.x-k8s.io/v1
+kind: SecretProviderClass
+metadata:
+  name: dvt-dev-kv-secret-api
+  namespace: dvt-dev-ns
+spec:
+  provider: azure
+  secretObjects:
+  - data:
+      - key: MainFileShareName
+        objectName: MainFileShareName
+      - key: PostgreSQLConnectionString
+        objectName: PostgreSQLConnectionString
+      - key: StorageAccountConnectionString
+        objectName: StorageAccountConnectionString
+      - key: UserFileShareName
+        objectName: UserFileShareName
+    secretName: akv-dvt-dev-sec-api
+    type: Opaque
+  parameters:
+    useVMManagedIdentity: "true"
+    userAssignedIdentityID:  ##ClientID##
+    keyvaultName: kv-aks-dvt-nonprod
+    objects: |
+      array:
+        - |
+          objectName: MainFileShareName
+          objectType: secret
+          objectAlias: MainFileShareName
+        - |
+          objectName: PostgreSQLConnectionString
+          objectType: secret
+          objectAlias: PostgreSQLConnectionString
+        - |
+          objectName: StorageAccountConnectionString
+          objectType: secret
+          objectAlias: StorageAccountConnectionString
+        - |
+          objectName: UserFileShareName
+          objectType: secret
+          objectAlias: UserFileShareName
+    tenantId:  ##TenantID##
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dvt-dev-api-deploy
+  namespace: dvt-dev-ns
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: dvt-dev-api
+  template:
+    metadata:
+      labels:
+        app: dvt-dev-api
+    spec:
+      volumes:
+        - name: secrets-store-inline
+          csi:
+            driver: secrets-store.csi.k8s.io
+            readOnly: true
+            volumeAttributes:
+              secretProviderClass: dvt-dev-kv-secret-api
+      containers:
+      - name: dvt-dev-api
+        image: ##acr-name##/##imageName##:##BuildId##
+        ports:
+        - containerPort: 80
+        volumeMounts:
+          - name: secrets-store-inline
+            mountPath: /mnt/secrets-store
+            readOnly: true
+        env:
+          - name: MainFileShareName
+            valueFrom:
+              secretKeyRef:
+                name: akv-dvt-dev-sec-api
+                key: MainFileShareName
+          - name: PostgreSQLConnectionString
+            valueFrom:
+              secretKeyRef:
+                name: akv-dvt-dev-sec-api
+                key: PostgreSQLConnectionString
+          - name: StorageAccountConnectionString
+            valueFrom:
+              secretKeyRef:
+                name: akv-dvt-dev-sec-api
+                key: StorageAccountConnectionString
+          - name: UserFileShareName
+            valueFrom:
+              secretKeyRef:
+                name: akv-dvt-dev-sec-api
+                key: UserFileShareName
+          - name: ASPNETCORE_ENVIRONMENT
+            value: "Development" 				
+        imagePullPolicy: Always
+      imagePullSecrets:
+        - name: ##ACR-SECRET##
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dvt-dev-api-svc
+  namespace: dvt-dev-ns
+spec:
+  ports:
+  - name: http
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  - name: https
+    port: 443
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: dvt-dev-api
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: dvt-dev-ingress
+  namespace: dvt-dev-ns
+  annotations:
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "*"
+    nginx.ingress.kubernetes.io/cors-allow-methods: "GET, POST, PUT, DELETE, OPTIONS"
+    nginx.ingress.kubernetes.io/cors-allow-headers: "DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range, Authorization"
+    nginx.ingress.kubernetes.io/cors-expose-headers: "Content-Length,Content-Range"
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "300"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "300"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "300"
+    nginx.ingress.kubernetes.io/websocket-services: "dvt-dev-api-svc"
+    nginx.ingress.kubernetes.io/affinity: "cookie"
+    nginx.ingress.kubernetes.io/session-cookie-name: "route"
+    nginx.ingress.kubernetes.io/session-cookie-hash: "sha1"
+    nginx.ingress.kubernetes.io/limit-connections: "20"
+    nginx.ingress.kubernetes.io/limit-rpm: "60"
+    nginx.ingress.kubernetes.io/server-snippet: |  
+      ssl_ciphers "EECDH+ECDSA+AESGCM EECDH+aRSA+AESGCM EECDH+ECDSA+SHA384 EECDH+ECDSA+SHA256 EECDH+aRSA+SHA384 EECDH+aRSA+SHA256 EECDH+aRSA+RC4 EECDH EDH+aRSA HIGH !RC4 !aNULL !eNULL !LOW !3DES !MD5 !EXP !PSK !SRP !DSS";
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      more_set_headers "Strict-Transport-Security: max-age=31536000; includeSubDomains; preload";
+      more_set_headers "server: hide";
+      more_set_headers "X-Content-Type-Options: nosniff";
+      more_set_headers "Expires: Tue, 03 Jul 2001 06:00:00 GMT";
+      more_set_headers "Cache-Control: no-store, no-cache, must-revalidate, max-age=0";
+      more_set_headers "X-Frame-Options: SAMEORIGIN";
+      more_set_headers "X-XSS-Protection: 1; mode=block";
+      more_set_headers "Access-Control-Allow-Origin: *";
+spec:
+  ingressClassName: ingress-class-dev
+  tls:
+    - hosts:
+        - ##hostname##
+      secretName: ingress-tls-csi
+  rules:
+    - host: ##hostname##
+      http:
+        paths:
+          - path: /?(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: dvt-dev-ui-svc
+                port:
+                  number: 80
+          - path: /ui/?(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: dvt-dev-ui-svc
+                port:
+                  number: 80
+          - path: /api/?(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: dvt-dev-api-svc
+                port:
+                  number: 8080

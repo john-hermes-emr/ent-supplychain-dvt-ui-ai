@@ -1,0 +1,133 @@
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  buildConfiguration: 'Release'
+  DOTNET_CLI_TELEMETRY_OPTOUT: '1'
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: '1'
+  coverageThreshold: '80'  # minimum required line coverage %
+
+steps:
+# Use .NET SDK only on dev branch (adjust/remove this block if desired)
+- ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/dev') }}:
+  - task: UseDotNet@2
+    displayName: 'Use .NET SDK 8.x'
+    inputs:
+      packageType: 'sdk'
+      version: '8.0.x'
+
+  - task: DotNetCoreCLI@2
+    displayName: 'Restore packages'
+    inputs:
+      command: 'restore'
+      projects: '**/*.csproj'
+
+  - task: DotNetCoreCLI@2
+    displayName: 'Build solution'
+    inputs:
+      command: 'build'
+      projects: '**/*.csproj'
+      arguments: '--configuration $(buildConfiguration)'
+
+# Prepare deterministic output directory for test results
+- script: |
+    set -e
+    mkdir -p "$(Build.ArtifactStagingDirectory)/TestResults"
+  displayName: 'Prepare TestResults directory'
+
+# 1) Run tests with XPlat collector (writes coverage.cobertura.xml under TestResults/<GUID>/)
+- script: |
+    set -e
+    dotnet test ./DVT.Core.Tests/DVT.Core.Tests.csproj \
+      -c $(buildConfiguration) \
+      --logger "trx;LogFileName=test_results.trx" \
+      --results-directory "$(Build.ArtifactStagingDirectory)/TestResults" \
+      --collect:"XPlat Code Coverage"
+  displayName: 'Run tests (XPlat Code Coverage)'
+  continueOnError: false
+
+# 2) Diagnostics: list all coverage files found (runs even if test step failed)
+- script: |
+    echo "Searching for coverage.cobertura.xml under Artifacts and Sources..."
+    find "$(Build.ArtifactStagingDirectory)" -name "coverage.cobertura.xml" -print || true
+    find "$(Build.SourcesDirectory)" -name "coverage.cobertura.xml" -print || true
+  displayName: 'Locate coverage files'
+  condition: always()
+
+# 3) Merge coverage and produce HTML + JSON via ReportGenerator
+#    IMPORTANT: Quote the -reporttypes value to keep semicolons inside the argument.
+- script: |
+    set -e
+    dotnet tool install -g dotnet-reportgenerator-globaltool
+    export PATH="$PATH:$HOME/.dotnet/tools"
+    reportgenerator \
+      -reports:"$(Build.ArtifactStagingDirectory)/TestResults/**/coverage.cobertura.xml" \
+      -targetdir:"$(Build.ArtifactStagingDirectory)/CodeCoverage" \
+      -reporttypes:"HtmlInline_AzurePipelines;Cobertura;JsonSummary"
+  displayName: 'Create merged coverage report (ReportGenerator)'
+  condition: always()
+
+# 4) Gate: read JSON summary and fail if line coverage < threshold
+- pwsh: |
+    $summaryPath = "$(Build.ArtifactStagingDirectory)/CodeCoverage/Summary.json"
+    if (-not (Test-Path $summaryPath)) {
+      throw "Coverage Summary.json not found at $summaryPath (ReportGenerator could not merge or no coverage files produced)."
+    }
+
+    $json = Get-Content $summaryPath | ConvertFrom-Json
+    # ReportGenerator JsonSummary has 'summary.lineCoverage' as percentage (0-100)
+    $coverage   = [double]$json.summary.lineCoverage
+    $threshold  = [double]"$(coverageThreshold)"
+
+    Write-Host "Line coverage from Summary.json: $coverage% (threshold: $threshold%)"
+    if ($coverage -lt $threshold) {
+      throw "❌ Coverage gate failed: $coverage% < $threshold%"
+    } else {
+      Write-Host "✅ Coverage gate passed: $coverage% ≥ $threshold%"
+    }
+  displayName: 'Enforce coverage threshold (>= 80%)'
+  condition: always()
+
+# 5) Publish TRX to the Tests tab (always)
+- task: PublishTestResults@2
+  displayName: 'Publish Test Results (TRX)'
+  condition: always()
+  inputs:
+    testResultsFormat: 'VSTest'
+    testResultsFiles: '$(Build.ArtifactStagingDirectory)/TestResults/*.trx'
+    searchFolder: '$(Build.ArtifactStagingDirectory)/TestResults'
+    testRunTitle: 'Unit Test Results'
+    failTaskOnFailedTests: false
+
+# 6) Publish coverage to pipeline summary (after TRX is published)
+- task: PublishCodeCoverageResults@2
+  displayName: 'Publish Code Coverage (Cobertura)'
+  condition: always()
+  inputs:
+    summaryFileLocation: '$(Build.ArtifactStagingDirectory)/CodeCoverage/Cobertura.xml'
+    pathToSources: '$(Build.SourcesDirectory)'
+    failIfCoverageEmpty: true
+  #- task: DotNetCoreCLI@2
+  #  displayName: 'Run Unit Tests with Code Coverage'
+  #  inputs:
+  #    command: 'test'
+  #    projects: '/DVT.Core.Tests/DVT.Core.Tests.csproj'
+  #    arguments: '--configuration Release --collect "XPlat Code Coverage" --results-directory $(Build.SourcesDirectory)/TestResults'
+  #    publishTestResults: true
+  #- task: PublishTestResults@2
+  #  displayName: 'Publish Test Results'
+  #  condition: succeededOrFailed()
+  #  inputs:
+  #    testResultsFiles: '$(Build.SourcesDirectory)/TestResults/**/*.trx'
+  #    searchFolder: '$(Build.SourcesDirectory)/TestResults'
+  #    testRunTitle: 'Unit Test Results'
+
+  #- task: PublishCodeCoverageResults@2
+  #  displayName: 'Publish Code Coverage Results'
+  #  condition: succeededOrFailed()
+  #  inputs:
+  #    codeCoverageTool: 'cobertura'
+  #    summaryFileLocation: '$(Build.SourcesDirectory)/TestResults/**/coverage.cobertura.xml'
+  #    reportDirectory: '$(Build.SourcesDirectory)/TestResults'
+  #    failIfCoverageEmpty: false

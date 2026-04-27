@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "DVT.Core.Tests": {
+      "commandName": "Project",
+      "nativeDebugging": true
+    }
+  }
+}

@@ -1,0 +1,49 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="PostgreSQL\DbModifications\**" />
+    <Compile Remove="PostgreSQL\Procs\**" />
+    <Compile Remove="PostgreSQL\Queries\**" />
+    <Compile Remove="PostgreSQL\Security\**" />
+    <Compile Remove="PostgreSQL\Updates\**" />
+    <Compile Remove="PostgreSQL\Views\**" />
+    <EmbeddedResource Remove="PostgreSQL\DbModifications\**" />
+    <EmbeddedResource Remove="PostgreSQL\Procs\**" />
+    <EmbeddedResource Remove="PostgreSQL\Queries\**" />
+    <EmbeddedResource Remove="PostgreSQL\Security\**" />
+    <EmbeddedResource Remove="PostgreSQL\Updates\**" />
+    <EmbeddedResource Remove="PostgreSQL\Views\**" />
+    <None Remove="PostgreSQL\DbModifications\**" />
+    <None Remove="PostgreSQL\Procs\**" />
+    <None Remove="PostgreSQL\Queries\**" />
+    <None Remove="PostgreSQL\Security\**" />
+    <None Remove="PostgreSQL\Updates\**" />
+    <None Remove="PostgreSQL\Views\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.1.66" />
+    <PackageReference Include="Dapper.SqlBuilder" Version="2.1.66" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DVT.Core\DVT.Core.csproj" />
+  </ItemGroup>
+
+</Project>
